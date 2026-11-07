@@ -12,7 +12,12 @@ def _windows_generator_platform_impl(settings, attr):
     # executable matching the runner only after toolchain resolution. Only
     # that executable is an action input; the other variant is not built.
     return {
-        arch: {"//command_line_option:platforms": [str(Label(platform))]}
+        arch: {
+            # Keep the caller's platform identity when no CPU change is needed.
+            # Distinct labels with the same platform name can otherwise produce
+            # conflicting C++ actions under --experimental_platform_in_output_dir.
+            "//command_line_option:platforms": settings["//command_line_option:platforms"] if arch == attr.platform_arch else [str(Label(platform))],
+        }
         for arch, platform in {
             "x86_64": "@llvm//platforms:windows_x86_64_msvc",
             "aarch64": "@llvm//platforms:windows_aarch64_msvc",
@@ -21,7 +26,7 @@ def _windows_generator_platform_impl(settings, attr):
 
 _windows_generator_platform = transition(
     implementation = _windows_generator_platform_impl,
-    inputs = [],
+    inputs = ["//command_line_option:platforms"],
     outputs = ["//command_line_option:platforms"],
 )
 
@@ -80,6 +85,7 @@ def windows_snapshot_rule(cpu_transition):
         cfg = cpu_transition,
         attrs = {
             "args": attr.string_list(),
+            "platform_arch": attr.string(mandatory = True, values = ["aarch64", "x86_64"]),
             "target_arch": attr.string(mandatory = True, values = ["arm64", "x64"]),
             "tool": attr.label(
                 mandatory = True,
