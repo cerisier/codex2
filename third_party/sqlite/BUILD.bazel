@@ -28,6 +28,7 @@ sqlite_build_info(
 # Internal compilation options must not leak into dependent C/C++ targets.
 sqlite3_library(
     name = "sqlite3",
+    linkstatic = True,
     local_defines = [
         "SQLITE_CORE",
         "SQLITE_DEFAULT_FOREIGN_KEYS=1",
