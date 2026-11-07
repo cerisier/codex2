@@ -33,6 +33,7 @@ runs:
         # setup-bazel writes an explicit output_base, which otherwise overrides
         # BAZEL_OUTPUT_USER_ROOT and leaves Bazel's I/O-heavy trees on C:.
         output-base: ${{ steps.setup_ci.outputs.bazel-output-base }}
+        bazelrc: ${{ runner.os == 'Windows' && 'startup --host_jvm_args=-Xmx6g' || 'startup --host_jvm_args=-Xmx3g' }}
 
     - name: Configure Bazel repository cache
       id: configure_bazel_repository_cache

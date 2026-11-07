@@ -92,7 +92,7 @@ common:buildbuddy-openai-rbe --remote_executor=grpcs://openai.buildbuddy.io
 # This limits both in-flight executions and concurrent downloads. Even with high number
 # of jobs execution will still be limited by CPU cores, so this just pays a bit of
 # memory in exchange for higher download concurrency.
-common --jobs=30
+common --jobs=2
 
 # Shared remote execution policy. The endpoint-bearing `buildbuddy-*-rbe`
 # configurations include this group; CI configs override TestRunner below
