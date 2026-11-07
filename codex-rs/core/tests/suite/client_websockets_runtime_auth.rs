@@ -641,7 +641,7 @@ async fn paused_runtime_cannot_continue_on_an_admitted_websocket(mode: RuntimeAu
         listener.local_addr().unwrap()
     )));
     provider.request_max_retries = Some(0);
-    let (harness, _) = runtime_harness(&registration, provider, mode).await;
+    let (harness, _) = runtime_harness(&registration, provider, mode, Vec::new()).await;
     let requests = Arc::new(AtomicUsize::new(0));
     let proofs = Arc::new(std::sync::Mutex::new(Vec::new()));
     let server_requests = Arc::clone(&requests);
